@@ -1,0 +1,314 @@
+---
+title: "DataFest"
+author: "Nicolas Pacheco Soliz, 704821096"
+date: "April 5, 2019"
+output: html_document
+---
+
+```{r}
+games<-read_csv("games.csv")
+games
+
+
+
+rpe<- read_csv("rpe.csv")
+rpe
+
+wellness <- read_csv("wellness.csv")
+wellness
+
+gps<- read_csv("gps.csv")
+gps
+
+
+boxplot(data= wellness, Fatigue ~ Menstruation)
+boxplot(data= wellness, Fatigue ~ MonitoringScore)
+
+boxplot(data= wellness, Fatigue ~ SleepHours)
+
+library(car)
+
+library(dplyr)
+
+
+### by individuasl or by position 
+
+max(wellness$PlayerID)
+
+wellness$TrainingReadiness
+
+
+filter(wellness, PlayerID == 1)
+
+
+a<- filter(rpe, PlayerID == 6)
+
+filter(a, SessionType == "Game")
+
+
+wellness_p1 <- filter(wellness, PlayerID == 4)
+
+summary(lm(data = wellness_p1, Fatigue ~ Irritability))
+
+plot(data = wellness_p1, Fatigue ~ Irritability)
+
+
+plot(lm(data=wellness_p1, Fatigue ~ SleepQuality))
+
+
+
+filter(gps, PlayerID == 5)
+
+wellness
+
+games
+
+filter(rpe, SessionType == "Game")
+
+
+summary(wellness$Fatigue)
+var(wellness$Fatigue)
+rpe
+
+
+
+filter(rpe, Training == "Yes") %>% filter(filter(rpe, Training == "Yes"), PlayerID == 1) group_by(SessionType)
+  
+  
+  
+yes_training<-filter(rpe, Training == "Yes")
+
+a<-filter(yes_training, PlayerID == 1) %>% group_by(SessionType) 
+
+
+a
+summarise(a,  median = median(SessionLoad))  
+
+b<-wellness %>% group_by(PlayerID) %>% summarise(avg_fatigue = median(Fatigue), avg_irritability = mean(Irritability))
+
+b
+
+plot(data=b, avg_fatigue ~ avg_irritability)
+
+
+library(car)
+library(dplyr)
+
+nz<- games %>% filter(Opponent == "New Zealand")
+fiji<- games%>% filter(Opponent == "Fiji")
+ire<- games%>% filter(Opponent == "Ireland")
+
+newgames<-bind_rows(nz, fiji, ire)
+
+
+games
+rpe %>% filter(SessionType== "Game") %>% filter(PlayerID == 2)
+
+newgames
+
+new_wellness<-wellness %>% filter(PlayerID == 11)
+
+left_join(games, new_wellness, by = "Date") %>% group_by(Opponent) %>% summarise(avg_fatigue = mean(Fatigue))
+
+
+
+
+wellness %>% filter(PlayerID == 1)
+
+new_wellness<-wellness %>% filter(PlayerID == 16)
+ 
+c<-left_join(games, new_wellness, by ="Date") %>% group_by(Date) 
+c
+
+
+
+for(i in 1:nrow(c)){
+  
+  
+c$numdays[i] <- c$Date[i]- c$Date[1]
+  
+  
+  }
+plot(data=c, mean ~ mean)
+
+
+plot(c$Fatigue ~ c$numdays)
+
+
+new_wellness<-wellness %>% filter(PlayerID == 3)
+
+d<-left_join(games, wellness, by = "Date") %>% group_by(Opponent) %>% summarise(avg_fatigue = mean(Fatigue))
+d
+
+
+
+ggplot(data = g, aes(x = Date, y = Fatigue)) + geom_line()
+
+library(ggplot2)
+
+
+g<-wellness %>% filter(PlayerID == 3)
+ggplot(data = g, aes(x = Date, y = Fatigue)) + geom_line()
+
+min(g$Fatigue)
+
+
+g<-wellness %>% filter(PlayerID == 11)
+ggplot(data = g, aes(x = Date, y = Fatigue)) + geom_line()
+
+g<-wellness %>% filter(PlayerID == 13)
+ggplot(data = g, aes(x = Date, y = Fatigue)) + geom_line()
+
+
+
+g %>% filter(Fatigue == min(Fatigue))
+
+g %>% filter(Fatigue == min(Fatigue))
+g %>% filter(Fatigue == min(Fatigue))
+g %>% filter(Fatigue == min(Fatigue))
+
+
+
+
+wellness
+
+
+
+wellness %>% filter(PlayerID == 3) %>% select 
+
+
+
+for(i in 1:nrow(games)){
+
+games$pointdif[i] <- games$TeamPoints[i] - games$TeamPointsAllowed[i]
+}
+
+
+h<-left_join(games, wellness, by = "Date")
+games
+h
+
+##tournamrnt Dubai
+
+h %>% filter(Tournament== "Dubai") %>% group_by(Opponent) %>% summarise(pointdif = mean(pointdif), avgfatigue= mean(Fatigue))
+
+h %>% filter(Tournament== "Sydney") %>% group_by(Opponent) %>% summarise(pointdif = mean(pointdif), avgfatigue= mean(Fatigue))
+
+h %>% filter(Tournament== "Langford") %>% group_by(Opponent) %>% summarise(pointdif = mean(pointdif), avgfatigue= mean(Fatigue))
+
+h %>% filter(Tournament== "Paris") %>% group_by(Opponent) %>% summarise(pointdif = mean(pointdif), avgfatigue= mean(Fatigue))
+
+h %>% filter(Tournament== "Kitakyushu") %>% group_by(Opponent) %>% summarise(pointdif = mean(pointdif),  avgfatigue= mean(Fatigue))
+
+h %>% filter(Tournament== "World Cup") %>% group_by(Opponent) %>% summarise(pointdif = mean(pointdif), avgfatigue= mean(Fatigue))
+
+
+
+###From the dates vesus fatigue graph, we can see that depending on the difficulty of game, thereis a variation in fatigue; in tough game day such as new zealand, there seems to be high fatigue. IN easier games, there is lower fatigue 
+
+
+
+#to further investigate idea, we looked at the training routine a week leading up to the game, and compared it to their average training. We can ssee that the atheletes trained (either harder or lighter or the same as normal) before the games, and this resulted in their fatigue scor before the big game. 
+ 
+
+##if they trained the same, then it is unliely that their physicalstate  factor in ranking their fatigue
+
+
+library(dplyr)
+
+
+wellness
+
+k<-left_join(games, wellness, by = "Date") %>% group_by(Opponent) %>% summarise(Perceived_Fatigue = mean(Fatigue))
+
+
+
+
+k
+
+k$Opponent_Rank[1]<- 78.68
+k$Opponent_Rank[2]<- 38.00
+k$Opponent_Rank[3]<- 92.10
+k$Opponent_Rank[4]<- 48.06
+k$Opponent_Rank[5]<- 86.00
+k$Opponent_Rank[6]<- 72.44
+k$Opponent_Rank[7]<- 62.99
+
+k$Opponent_Rank[8]<- 44.35
+k$Opponent_Rank[9]<- 94.71
+k$Opponent_Rank[10]<- 58.47
+k$Opponent_Rank[11]<- 67.98
+k$Opponent_Rank[12]<- 73.18
+k$Opponent_Rank[13]<- 80.09
+
+arrange(k, desc(rank))
+
+names(k)[2] <- "Average "
+
+library(ggplot2)
+
+ggplot(data=k, aes(x=Opponent_Rank, y = Perceived_Fatigue))+ geom_point() + geom_smooth(method= lm)
+
+summary(lm(data=k, avg_fatigue ~ rank))
+
+
+rpe
+n<-rpe %>% filter(Training == "Yes") %>% filter(SessionType != "Game") 
+
+
+mean(n$SessionLoad)
+
+
+
+n
+
+
+game_dates<- as.Date(games$Date)
+uni_gdate<-unique(game_dates)
+uni_gdate
+
+
+
+##Nz: 1/27/2018, 4/14/2018, 6/9/2019
+##Fiji : 11/30/2017, 1/26/2018, 4/21/2019, 6/8/2018
+
+
+m<-n %>% group_by(Date) %>% summarise(avgload = mean(SessionLoad))
+
+m
+
+mean(n$SessionLoad)
+
+one<- slice(m,168:174)
+
+mean(one$avgload)
+
+
+two<-slice(m,234:240)
+mean(two$avgload)
+
+three<-slice(m,286:292)
+mean(three$avgload)
+
+
+
+##for fiji 
+
+four<-slice(m,113:120)
+mean(four$avgload)
+
+
+five<-slice(m,167:173)
+mean(five$avgload)
+
+six<-slice(m,243:249)
+mean(six$avgload)
+
+seven<-slice(m,285:291)
+mean(seven$avgload)
+
+
+
+plot(data = wellness, Fatigue ~ SleepQuality)
+
+```
